@@ -3,6 +3,8 @@
 import { Heart, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import Pagination from './Pagination';
 
 interface Pokemon {
   name: string;
@@ -64,8 +66,15 @@ export function PokemonList({
   return (
     <div className="space-y-6">
       {/* Results Info */}
-      <div className="text-sm text-gray-600 dark:text-gray-400">
-        Showing {startIndex}-{endIndex} of {totalCount} Pokémon
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-gray-600 dark:text-gray-400">
+          Showing {startIndex}-{endIndex} of {totalCount} Pokémon
+        </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+        />
       </div>
 
       {/* Pokémon Grid */}
@@ -73,7 +82,7 @@ export function PokemonList({
         {data.map((pokemon) => {
           const pokemonId = pokemon.url.split('/').slice(-2, -1)[0];
           const isFav = isFavorite(pokemon.name);
-          
+
           return (
             <div
               key={pokemon.name}
@@ -85,17 +94,16 @@ export function PokemonList({
                 </h3>
                 <button
                   onClick={() => onToggleFavorite(pokemon.name)}
-                  className={`p-1 rounded-full transition-colors ${
-                    isFav
-                      ? 'text-red-500 hover:text-red-600'
-                      : 'text-gray-400 hover:text-red-500'
-                  }`}
+                  className={`p-1 rounded-full transition-colors ${isFav
+                    ? 'text-red-500 hover:text-red-600'
+                    : 'text-gray-400 hover:text-red-500'
+                    }`}
                   aria-label={`${isFav ? 'Remove from' : 'Add to'} favorites`}
                 >
                   <Heart className={`w-5 h-5 ${isFav ? 'fill-current' : ''}`} />
                 </button>
               </div>
-              
+
               <div className="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 flex items-center justify-center">
                 <Image
                   src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
@@ -105,7 +113,7 @@ export function PokemonList({
                   className="w-full h-full object-contain"
                 />
               </div>
-              
+
               <div className="flex gap-2">
                 <Link
                   href={`/pokemon/${pokemon.name}`}
@@ -120,29 +128,11 @@ export function PokemonList({
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
-          <button
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          
-          <span className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
-            Page {currentPage} of {totalPages}
-          </span>
-          
-          <button
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      )}
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 }

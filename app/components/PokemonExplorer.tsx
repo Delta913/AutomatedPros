@@ -27,7 +27,7 @@ async function fetchPokemonList(offset: number, limit: number, search: string, a
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000`, { signal: abortSignal });
     if (!response.ok) throw new Error('Failed to fetch Pokémon');
     const data = await response.json();
-    const filtered = data.results.filter((pokemon: Pokemon) => 
+    const filtered = data.results.filter((pokemon: Pokemon) =>
       pokemon.name.toLowerCase().includes(search.toLowerCase())
     );
     return {
@@ -37,7 +37,7 @@ async function fetchPokemonList(offset: number, limit: number, search: string, a
       results: filtered.slice(offset, offset + limit)
     };
   }
-  
+
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`, { signal: abortSignal });
   if (!response.ok) throw new Error('Failed to fetch Pokémon');
   return response.json();
@@ -46,33 +46,36 @@ async function fetchPokemonList(offset: number, limit: number, search: string, a
 export function PokemonExplorer() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'name');
   const [showFavorites, setShowFavorites] = useState(searchParams.get('favorites') === 'true');
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
-  
+
   const debouncedSearch = useDebounce(search, 300);
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
-  
+
   const limit = 30;
   const offset = (currentPage - 1) * limit;
 
   // Update URL when state changes
   useEffect(() => {
+    console.log(currentPage);
     const params = new URLSearchParams();
     if (debouncedSearch) params.set('q', debouncedSearch);
     if (sortBy !== 'name') params.set('sort', sortBy);
     if (showFavorites) params.set('favorites', 'true');
     if (currentPage > 1) params.set('page', currentPage.toString());
-    
+
     const newUrl = params.toString() ? `?${params.toString()}` : '';
     router.replace(newUrl);
   }, [debouncedSearch, sortBy, showFavorites, currentPage, router]);
 
   // Reset to page 1 when search changes
   useEffect(() => {
-    setCurrentPage(1);
+    if (debouncedSearch) {
+      setCurrentPage(1);
+    }
   }, [debouncedSearch]);
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -83,8 +86,8 @@ export function PokemonExplorer() {
 
   const filteredAndSortedData = useCallback(() => {
     if (!data?.results) return [];
-    
-    let results = showFavorites 
+
+    let results = showFavorites
       ? data.results.filter(pokemon => isFavorite(pokemon.name))
       : data.results;
 

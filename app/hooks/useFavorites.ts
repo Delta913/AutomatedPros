@@ -8,7 +8,6 @@ export const useFavorites = () => {
     try {
       const stored = localStorage.getItem('pokemon-favorites');
       if (stored) {
-        console.log('stored', stored);
         setFavorites(JSON.parse(stored));
       }
     } catch (error) {

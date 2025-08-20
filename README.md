@@ -96,6 +96,7 @@ This project is optimized for Vercel deployment:
 test/
 ├── app/
 │   ├── components/
+|   |   ├── Pagination.tsx         # Pagination component
 │   │   ├── PokemonExplorer.tsx    # Main explorer component with search/filters
 │   │   ├── PokemonList.tsx        # List component with pagination
 │   │   └── SearchFilters.tsx      # Search, sort, and filter controls
