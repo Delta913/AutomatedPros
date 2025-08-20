@@ -8,9 +8,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Resource Explorer - Pokémon",
   description: "Explore and discover Pokémon with search, filters, and favorites",
-  icons: {
-    icon: '/favicon.ico',
-  },
 };
 
 export default function RootLayout({
