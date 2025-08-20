@@ -60,7 +60,6 @@ export function PokemonExplorer() {
 
   // Update URL when state changes
   useEffect(() => {
-    console.log(currentPage);
     const params = new URLSearchParams();
     if (debouncedSearch) params.set('q', debouncedSearch);
     if (sortBy !== 'name') params.set('sort', sortBy);
