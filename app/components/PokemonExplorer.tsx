@@ -55,7 +55,7 @@ export function PokemonExplorer() {
   const debouncedSearch = useDebounce(search, 300);
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
   
-  const limit = 20;
+  const limit = 30;
   const offset = (currentPage - 1) * limit;
 
   // Update URL when state changes

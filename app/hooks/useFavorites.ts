@@ -8,6 +8,7 @@ export const useFavorites = () => {
     try {
       const stored = localStorage.getItem('pokemon-favorites');
       if (stored) {
+        console.log('stored', stored);
         setFavorites(JSON.parse(stored));
       }
     } catch (error) {
@@ -18,7 +19,9 @@ export const useFavorites = () => {
   // Save favorites to localStorage whenever they change
   useEffect(() => {
     try {
-      localStorage.setItem('pokemon-favorites', JSON.stringify(favorites));
+      if (favorites.length > 0) {
+        localStorage.setItem('pokemon-favorites', JSON.stringify(favorites));
+      }
     } catch (error) {
       console.error('Failed to save favorites to localStorage:', error);
     }
